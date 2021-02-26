@@ -22,6 +22,9 @@ defmodule ReportGenerator.Processor do
 			"#{Atom.to_string(List.first(item[:item]))} - #{item[:year]} \n"
 		end
 	}")
+	IO.write("Best Performing Representative: \n#{
+		Atom.to_string(List.first(Keyword.keys(create_report_best_performing_rep(data))))
+	} - €#{Float.to_string(List.first(Keyword.values(create_report_best_performing_rep(data))))}\n")
  end
 
  def read_file(csv_file) do
@@ -131,6 +134,23 @@ def create_report_best_selling(data) do
 		[item: Keyword.keys(result), year: Enum.fetch!(years, count)]
 	end
 
+end
+
+
+def create_report_best_performing_rep(data) do
+	rep_sales = for row <- data do
+		[{String.to_atom(Enum.fetch!(row, 2)), Float.round(String.to_integer(Enum.fetch!(row, 4)) * String.to_float(String.replace(Enum.fetch!(row, 5), " ", "")))}]
+	end
+
+	keys = Enum.uniq(Keyword.keys(List.flatten(rep_sales)))
+
+	rep_overall_sales = for key <- keys do
+		rep_values = Keyword.get_values(List.flatten(rep_sales), key)
+
+		[{key, Enum.sum(rep_values)}]
+	end
+
+	Enum.max_by(rep_overall_sales, fn x -> Keyword.values(x) end)
 end
 
 end
