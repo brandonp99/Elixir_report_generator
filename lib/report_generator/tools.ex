@@ -21,7 +21,7 @@ defmodule ReportGenerator.Tools do
       #fetch date string from data
       date_deconstructed = String.split(Enum.fetch!(row, 0), "/")
 
-      #rearrange order from m/d/y to d-m-y while adding 0 if day or month is single digit
+      #rearange order from m/d/y to d-m-y while adding 0 if day or month is single digit
       date_deconstructed = "20#{Enum.fetch!(date_deconstructed, 2)}-#{if String.to_integer(Enum.fetch!(date_deconstructed, 0)) < 10 do
         "0#{Enum.fetch!(date_deconstructed, 0)}"
       else
